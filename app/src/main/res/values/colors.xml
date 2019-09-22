@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">@color/indigo</color>
+    <color name="colorPrimaryDark">@color/indigo_dark</color>
+    <color name="colorAccent">@color/you_really_got_me</color>
+
+    <color name="white">#FFF</color>
+    <color name="almost_white">#F3F3F3</color>
+    <color name="grey_dark">#777</color>
+    <color name="grey_light">#AAAAAA</color>
+    <color name="not_so_grey">#ECECEC</color>
+    <color name="transparent">#00000000</color>
+    <color name="black">#000</color>
+    <color name="almost_black">#333</color>
+
+    <color name="indigo">#3F51B5</color>
+    <color name="indigo_dark">#303F9F</color>
+    <color name="indigo_light">#C5CAE9</color>
+
+    <color name="nice_green">#008577</color>
+    <color name="nice_green_25">#40008577</color>
+    <color name="darker_green">#00574B</color>
+    <color name="hot_pink">#D81B60</color>
+    <color name="hot_pink_25">#40D81B60</color>
+    <color name="you_really_got_me">#AB234B</color>
+</resources>

@@ -1,0 +1,85 @@
+<resources>
+    <string name="app_name">netsee</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="dlg_ask2download">
+        Nmap binary not found.
+        This is required for this application to work.
+    </string>
+    <string name="dlg_ask2download_yes">Download</string>
+    <string name="dlg_ask2download_no">Exit</string>
+    <string name="dlg_progress_title_extraction">Extracting</string>
+    <string name="dlg_progress_title_download">Downloading</string>
+    <string name="toast_dowload_binary_error">Nmap binary download error</string>
+    <string name="toast_download_binary_ok">Nmap binary successfully downloaded</string>
+    <string name="nmapbin_version">nmap</string>
+    <string name="dlg_ask2downloaddata">Download additional data now?</string>
+    <string name="dlg_ask2deletedata">Would you like to delete the downloaded data?</string>
+    <string name="dlg_ask2delete_yes">Delete</string>
+    <string name="dlg_ask2delete_no">Nai</string>
+    <string name="toast_data_extraction_ok">Data extracted successfully</string>
+    <string name="default_update_url">https://github.com/kost/nmap-android/releases/download</string>
+    <string name="default_version_url">https://s3.amazonaws.com/nmap-dl/nmap-android-ui</string>
+
+    <string name="host_scan">Host scan</string>
+    <string name="net_scan">Network scan</string>
+    <string name="new_netscan">New network scan</string>
+    <string name="network_addr">Network address</string>
+    <string name="mask">Mask</string>
+    <string name="scan_type">Scan Type</string>
+    <string name="pick_type">Pick a type</string>
+    <string name="scan">Scan</string>
+
+    <!-- Host scan options -->
+    <string name="version_opts">--version</string>
+    <string name="regular_scan_opts"></string>
+    <string name="service_scan_opts">-sV</string>
+    <string name="os_scan_opts">-O</string>
+    <string name="os_service_opts">-O -sV</string>
+    <string name="intense_scan_opts">-A -T4</string>
+    <string name="fast_scan_opts">-F</string>
+    <string name="intense_scan_all_tcp_opts">-p 1-65535 -A -T4</string>
+
+    <!-- Network scan options -->
+    <string name="host_discovery_opts">-sP --reason</string>
+    <string name="host_service_discovery_opts">-sV --reason</string>
+    <string name="host_os_discovery_opts">-O --reason</string>
+    <string name="host_os_service_discovery_opts">-O -sV --reason</string>
+
+    <!-- Misc options -->
+    <string name="xml_opt">-oX -</string>
+
+    <!-- Hosts -->
+    <string name="host_up">Host is up</string>
+    <string name="host_down">Host is down</string>
+    <string name="state_reason">Reason: %s</string>
+    <string name="host_services">%d services detected.</string>
+
+    <!-- Errors -->
+    <string name="scan_error">The scan failed</string>
+    <string name="no_service_version_info">Unknown version</string>
+
+    <string name="run_always_as_root">always_scan_as_root</string>
+    <string name="hint_scans">Scans wills appear here once completed.</string>
+    <string name="scan_running">Scan is running…</string>
+    <string name="new_hostscan">New host scan</string>
+    <string name="host_addr">Host address or name</string>
+    <string name="address">Address</string>
+    <string name="summary">Scan summary</string>
+    <string name="summary_hosts">%d hosts up, %d hosts down.</string>
+    <string name="summary_time">Scan finished in %.2f seconds.</string>
+    <string name="discovered_hosts">Discovered hosts</string>
+    <string name="no_services">No services detected.</string>
+    <string name="title_activity_host_detail">HostDetailActivity</string>
+    <string name="host_address">Host address</string>
+    <string name="mac">MAC</string>
+    <string name="unknown">Unknown</string>
+    <string name="discover">Discover</string>
+    <string name="mac_vendor">MAC vendor</string>
+    <string name="os">O.S.</string>
+    <string name="hostname">Hostname</string>
+    <string name="services">Services</string>
+    <string name="online">online</string>
+
+</resources>
