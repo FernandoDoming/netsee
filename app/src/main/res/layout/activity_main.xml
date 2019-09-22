@@ -100,23 +100,50 @@
 
     </LinearLayout>
 
+    <include layout="@layout/running_scan_notice" />
 
-    <TextView
-        android:id="@+id/hint_scans"
-        android:layout_width="match_parent"
+    <RelativeLayout
+        android:id="@+id/no_scans_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:text="@string/hint_scans"
-        android:textAlignment="center"
-        android:textColor="@color/grey_light"
-        android:textSize="20sp"
-        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35000002" />
+        app:layout_constraintVertical_bias="0.35000002" >
+
+        <ImageView
+            android:id="@+id/empty_scans_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/comp_server_laberinth"
+            tools:srcCompat="@drawable/comp_server_laberinth" />
+
+        <TextView
+            android:id="@+id/hint_no_scans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/empty_scans_image"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:text="@string/hint_no_scans"
+            android:textAlignment="center"
+            android:textColor="@color/almost_black"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/hint_scans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/hint_no_scans"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:text="@string/hint_scans"
+            android:textAlignment="center"
+            android:textColor="@color/grey_light"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
 
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/newScanButton"
@@ -127,7 +154,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:sdMainFabClosedSrc="@drawable/ic_add_white_24dp" />
 
-    <LinearLayout
+    <!--LinearLayout
         android:id="@+id/scan_running_hint_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -151,6 +178,6 @@
             android:layout_height="wrap_content"
             android:text="@string/scan_running"
             android:textColor="@color/colorAccent" />
-    </LinearLayout>
+    </LinearLayout-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

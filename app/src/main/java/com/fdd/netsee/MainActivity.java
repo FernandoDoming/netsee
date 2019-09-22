@@ -44,13 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
     public ProgressDialog sharedProgressDialog;
     public ProgressBar scanProgressBar;
+    private Snackbar scanSnackbar;
 
-    private LinearLayout scanRunningNoticeContainer;
+    private View scanRunningNoticeContainer;
     private RecyclerView scanResultList;
     private View scanResultContainer;
     private HostListAdapter scanResultAdapter;
 
     private final Context context = this;
+    private Scan runningScan = null;
     private int currentEabi;
 
     @Override
@@ -88,8 +90,13 @@ public class MainActivity extends AppCompatActivity {
         sharedProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         sharedProgressDialog.setCancelable(false);
 
-        scanProgressBar = findViewById(R.id.scan_progress);
-        scanRunningNoticeContainer = findViewById(R.id.scan_running_hint_container);
+        scanRunningNoticeContainer = findViewById(R.id.scan_running_container);
+        findViewById(R.id.stop_scan_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopRunningScan();
+            }
+        });
 
         scanResultContainer = findViewById(R.id.scan_results_container);
         scanResultList = findViewById(R.id.scan_result_list);
@@ -153,18 +160,34 @@ public class MainActivity extends AppCompatActivity {
     
     private void onInitScan() {
         scanResultContainer.setVisibility(View.GONE);
-        findViewById(R.id.hint_scans).setVisibility(View.VISIBLE);
+        scanRunningNoticeContainer.setVisibility(View.GONE);
+        findViewById(R.id.no_scans_container).setVisibility(View.VISIBLE);
     }
 
     public void onScanInProgress() {
-        scanProgressBar.setIndeterminate(true);
+        View root = findViewById(R.id.container);
+
+        findViewById(R.id.no_scans_container).setVisibility(View.GONE);
         scanRunningNoticeContainer.setVisibility(View.VISIBLE);
+
+        /*scanSnackbar = Snackbar.make(
+                root, getString(R.string.scan_running), Snackbar.LENGTH_INDEFINITE
+        ).setAction("STOP", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopRunningScan();
+            }
+        });
+        scanSnackbar.show();*/
     }
 
     public void onScanCompleted(Scan scan) {
-        findViewById(R.id.hint_scans).setVisibility(View.GONE);
+        findViewById(R.id.no_scans_container).setVisibility(View.GONE);
         scanRunningNoticeContainer.setVisibility(View.GONE);
-        scanProgressBar.setIndeterminate(false);
+        runningScan = null;
+        //scanSnackbar.dismiss();
+
+        if (scan == null) return;
 
         if (scan.getScanResult() != null) {
             /* Scan success */
@@ -211,7 +234,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void runScan(Scan scan) {
         scan.run(this, NMAP_BINARY_FILE);
+        runningScan = scan;
         onScanInProgress();
+    }
+
+    public void stopRunningScan() {
+        if (runningScan != null) {
+            runningScan.stop();
+            onScanCompleted(null);
+        }
     }
 
     /* Helper functions */

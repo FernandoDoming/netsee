@@ -1,6 +1,7 @@
 package com.fdd.netsee.models;
 
 import android.content.Context;
+import android.os.AsyncTask;
 
 import com.fdd.netsee.async.NmapExecutor;
 
@@ -9,6 +10,8 @@ public class Scan {
     protected ScanType type;
     protected String intensity;
     protected ScanResult scanResult;
+
+    private AsyncTask scanTask;
 
     public ScanResult getScanResult() {
         return scanResult;
@@ -19,7 +22,11 @@ public class Scan {
     }
 
     public void run(Context context, String binary) {
-        new NmapExecutor(context, binary).execute(this);
+         scanTask = new NmapExecutor(context, binary).execute(this);
+    }
+
+    public void stop() {
+        scanTask.cancel(true);
     }
 
     public ScanType getType() {

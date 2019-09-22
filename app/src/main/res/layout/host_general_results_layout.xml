@@ -140,11 +140,20 @@
 
     </RelativeLayout>
 
-    <View
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/not_so_grey"
-        />
+        android:layout_height="wrap_content"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/not_so_grey"
+            />
+
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

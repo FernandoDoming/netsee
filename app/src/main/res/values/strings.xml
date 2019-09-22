@@ -81,5 +81,8 @@
     <string name="hostname">Hostname</string>
     <string name="services">Services</string>
     <string name="online">online</string>
+    <string name="hint_no_scans">No scans yet!</string>
+    <string name="hint_scan_running">Allow some time for the scan to finish.</string>
+    <string name="stop">STOP</string>
 
 </resources>
