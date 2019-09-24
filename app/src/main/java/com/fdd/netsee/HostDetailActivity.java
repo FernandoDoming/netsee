@@ -1,4 +1,4 @@
-package com.fdd.netsee.ui;
+package com.fdd.netsee;
 
 import android.os.Bundle;
 

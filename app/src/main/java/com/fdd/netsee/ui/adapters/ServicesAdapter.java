@@ -1,16 +1,20 @@
 package com.fdd.netsee.ui.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.fdd.netsee.R;
+import com.fdd.netsee.ServiceDetailActivity;
+import com.fdd.netsee.constants.Extras;
 import com.fdd.netsee.models.Service;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -40,11 +44,12 @@ public class ServicesAdapter extends ArrayAdapter {
             v = vi.inflate(resourceLayout, null);
         }
 
-        Service service = (Service) getItem(position);
+        final Service service = (Service) getItem(position);
         if (service != null)
         {
             TextView serviceName = v.findViewById(R.id.service_name);
             TextView serviceVersion = v.findViewById(R.id.service_version);
+            Button details = v.findViewById(R.id.service_details_button);
             ChipGroup chipGroup = v.findViewById(R.id.service_chips);
 
             String name = service.getProtocol() + "/" + service.getPort();
@@ -53,16 +58,27 @@ public class ServicesAdapter extends ArrayAdapter {
             }
             serviceName.setText(name);
 
-            if (service.getVersion() != null) {
-                serviceVersion.setText( service.getVersion() );
+            if (service.getProduct() != null) {
+                serviceVersion.setText( service.getProduct() );
             }
             else {
-                serviceVersion.setText( R.string.no_service_version_info );
+                serviceVersion.setText( R.string.unknown_service );
             }
 
             chipGroup.removeAllViews();
             addChipToContainer(chipGroup, service.getStatus().getState());
-            addChipToContainer(chipGroup, service.getStatus().getReason());
+
+            details.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Context ctx = getContext();
+                    if (ctx == null) return;
+
+                    Intent intent = new Intent(ctx, ServiceDetailActivity.class);
+                    intent.putExtra(Extras.SERVICE_EXTRA, service);
+                    ctx.startActivity(intent);
+                }
+            });
         }
 
         return v;

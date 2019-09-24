@@ -1,6 +1,9 @@
 package com.fdd.netsee.ui.fragments;
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,7 +18,10 @@ import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import androidx.fragment.app.Fragment;
 
+import com.fdd.netsee.HostDetailActivity;
 import com.fdd.netsee.R;
+import com.fdd.netsee.ServiceDetailActivity;
+import com.fdd.netsee.constants.Extras;
 import com.fdd.netsee.models.Host;
 import com.fdd.netsee.models.Service;
 import com.fdd.netsee.ui.adapters.GeneralResultsListAdapter;
@@ -23,6 +29,8 @@ import com.fdd.netsee.ui.adapters.ServicesAdapter;
 import com.google.android.material.chip.Chip;
 
 import org.w3c.dom.Text;
+
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -80,6 +88,7 @@ public class HostDetailFragment extends Fragment {
         return rootView;
     }
 
+    @SuppressLint("SetTextI18n")
     private void fillGeneralSection(Host host, View root)
     {
         Resources res = root.getContext().getResources();
@@ -93,7 +102,7 @@ public class HostDetailFragment extends Fragment {
         Chip onlineChip        = root.findViewById(R.id.online_chip);
 
         addressView.setText( host.getAddress() );
-        reasonView.setText( host.getStatus().getReason() );
+        reasonView.setText( humanizeReason(host.getStatus().getReason()) );
 
         if (host.getMac() != null) {
             macView.setText(host.getMac());
@@ -126,11 +135,27 @@ public class HostDetailFragment extends Fragment {
     private void fillServicesList(Host host, View root)
     {
         ListView servicesList  = root.findViewById(R.id.services_list);
+        final List<Service> services = host.getServices();
 
         servicesList.setEmptyView( root.findViewById(R.id.empty_services) );
         ServicesAdapter customAdapter = new ServicesAdapter(
-                this.getContext(), R.layout.service_list_row, host.getServices()
+                this.getContext(), R.layout.service_list_row, services
         );
         servicesList.setAdapter(customAdapter);
+    }
+
+    private String humanizeReason(String reason) {
+        String text = reason;
+        switch (reason) {
+            case "syn-ack":
+                text = getString(R.string.reason_syn_ack);
+                break;
+
+            case "conn-refused":
+                text = getString(R.string.reason_conn_refused);
+                break;
+        }
+
+        return text;
     }
 }

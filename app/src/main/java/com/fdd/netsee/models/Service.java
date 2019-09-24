@@ -8,6 +8,7 @@ public class Service implements Serializable {
     private String service;
     private String version;
     private String cpe;
+    private String product;
     private ServiceStatus status;
 
     public Service(String protocol, String port, String service, ServiceStatus status) {
@@ -45,5 +46,21 @@ public class Service implements Serializable {
 
     public void setCpe(String cpe) {
         this.cpe = cpe;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
+
+    public String getTitle() {
+        String title = getProtocol() + "/" + getPort();
+        if (getService() != null) {
+            title += " - " + getService();
+        }
+        return title;
     }
 }

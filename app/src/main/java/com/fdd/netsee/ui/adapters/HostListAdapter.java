@@ -16,7 +16,7 @@ import com.fdd.netsee.R;
 import com.fdd.netsee.constants.Extras;
 import com.fdd.netsee.helpers.ScanHelper;
 import com.fdd.netsee.models.Host;
-import com.fdd.netsee.ui.HostDetailActivity;
+import com.fdd.netsee.HostDetailActivity;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 

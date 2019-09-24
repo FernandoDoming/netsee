@@ -6,13 +6,18 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -58,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_wrapper);
 
         /*
         BottomNavigationView navView = findViewById(R.id.nav_view);
@@ -74,6 +79,13 @@ public class MainActivity extends AppCompatActivity {
         NMAP_VERSION_URL  = getResources().getString(R.string.default_version_url);
         NMAP_BINARY_FILE = getFilesDir().getParent() + "/bin/nmap";
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle("netsee");
+        }
+
         initViews();
 
         try {
@@ -83,6 +95,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_options:
+                break;
+
+            case R.id.actions_about:
+
+                break;
+        }
+        return true;
+    }
+
     private void initViews() {
         sharedProgressDialog = new ProgressDialog(this);
         sharedProgressDialog.setMessage(getString(R.string.dlg_progress_title_download));
@@ -90,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
         sharedProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         sharedProgressDialog.setCancelable(false);
 
+        scanProgressBar = findViewById(R.id.scan_progress_bar);
         scanRunningNoticeContainer = findViewById(R.id.scan_running_container);
         findViewById(R.id.stop_scan_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.no_scans_container).setVisibility(View.GONE);
         scanRunningNoticeContainer.setVisibility(View.VISIBLE);
+        scanProgressBar.setVisibility(View.VISIBLE);
 
         /*scanSnackbar = Snackbar.make(
                 root, getString(R.string.scan_running), Snackbar.LENGTH_INDEFINITE
@@ -184,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
     public void onScanCompleted(Scan scan) {
         findViewById(R.id.no_scans_container).setVisibility(View.GONE);
         scanRunningNoticeContainer.setVisibility(View.GONE);
+        scanProgressBar.setVisibility(View.GONE);
         runningScan = null;
         //scanSnackbar.dismiss();
 

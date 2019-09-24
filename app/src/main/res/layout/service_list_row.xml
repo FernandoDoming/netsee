@@ -9,24 +9,32 @@
         android:id="@+id/service_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
         android:text="Name"
         android:textColor="@color/almost_black"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/service_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/service_name"
+        android:layout_marginBottom="10dp"
         android:text="Version"
         android:textColor="@color/grey_dark" />
+
+    <Button
+        android:id="@+id/service_details_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/details"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_alignParentEnd="true" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/service_chips"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/service_version"
-        android:layout_marginTop="5dp"
+        android:paddingBottom="15dp"
         app:singleLine="true" />
 </RelativeLayout>

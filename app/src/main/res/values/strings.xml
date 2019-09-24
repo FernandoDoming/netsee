@@ -47,6 +47,10 @@
     <string name="host_os_discovery_opts">-O --reason</string>
     <string name="host_os_service_discovery_opts">-O -sV --reason</string>
 
+    <!-- State reasons -->
+    <string name="reason_syn_ack">The host completed the 3 way TCP handshake.</string>
+    <string name="reason_conn_refused">The host sent a connection refused package back to us.</string>
+
     <!-- Misc options -->
     <string name="xml_opt">-oX -</string>
 
@@ -84,5 +88,14 @@
     <string name="hint_no_scans">No scans yet!</string>
     <string name="hint_scan_running">Allow some time for the scan to finish.</string>
     <string name="stop">STOP</string>
+    <string name="options">Options</string>
+    <string name="about">About</string>
+    <string name="unknown_service">Unidentified service</string>
+    <string name="reason">Reason</string>
+    <string name="details">Details</string>
+    <string name="version">Version</string>
+    <string name="unknown_version">Unknown version</string>
+    <string name="product">Product</string>
+    <string name="undefined">Undefined</string>
 
 </resources>
