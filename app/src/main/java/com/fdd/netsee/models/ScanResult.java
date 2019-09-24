@@ -14,6 +14,8 @@ public abstract class ScanResult implements Serializable {
     private String output;
     private String summary;
 
+    /* Abstract methods */
+
     public abstract List<Host> getHosts();
     public abstract String getResult();
 

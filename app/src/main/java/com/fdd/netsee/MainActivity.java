@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private Snackbar scanSnackbar;
 
     private View scanRunningNoticeContainer;
-    private View scanResultContainer;
 
     private final Context context = this;
     private Scan runningScan = null;
@@ -130,8 +129,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        scanResultContainer = findViewById(R.id.scan_results_container);
-
         SpeedDialView speedDialView = findViewById(R.id.newScanButton);
         speedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.fab_net_scan, R.drawable.ic_lan)
@@ -186,7 +183,6 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void onInitScan() {
-        scanResultContainer.setVisibility(View.GONE);
         scanRunningNoticeContainer.setVisibility(View.GONE);
         findViewById(R.id.no_scans_container).setVisibility(View.VISIBLE);
     }
@@ -227,8 +223,10 @@ public class MainActivity extends AppCompatActivity {
         else {
             /* Scan error */
             String errorStr = getResources().getString(R.string.scan_error);
-            Snackbar.make(scanResultContainer, errorStr, Snackbar.LENGTH_LONG)
-                    .show();
+            Snackbar.make(
+                findViewById(R.id.container),
+                errorStr, Snackbar.LENGTH_LONG
+            ).show();
         }
     }
 
