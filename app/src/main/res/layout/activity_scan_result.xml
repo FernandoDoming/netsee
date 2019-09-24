@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HostDetailActivity">
+    tools:context=".ScanResultActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -25,10 +25,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_host_detail" />
+    <include layout="@layout/content_scan_result" />
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/host_viewpager"
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />

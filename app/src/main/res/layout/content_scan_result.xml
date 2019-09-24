@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".HostDetailActivity"
-    tools:showIn="@layout/activity_host_detail">
+    tools:context=".ScanResultActivity"
+    tools:showIn="@layout/activity_scan_result">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,33 +2,22 @@ package com.fdd.netsee.ui.fragments;
 
 
 import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.core.graphics.ColorUtils;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
-import com.fdd.netsee.HostDetailActivity;
 import com.fdd.netsee.R;
-import com.fdd.netsee.ServiceDetailActivity;
-import com.fdd.netsee.constants.Extras;
 import com.fdd.netsee.models.Host;
 import com.fdd.netsee.models.Service;
-import com.fdd.netsee.ui.adapters.GeneralResultsListAdapter;
 import com.fdd.netsee.ui.adapters.ServicesAdapter;
 import com.google.android.material.chip.Chip;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -45,7 +34,6 @@ public class HostDetailFragment extends Fragment {
 
     private final static int GENERAL_SECTION_NUMBER = 1;
     private final static int NETWORK_MAP_SECTION_NUMBER = 2;
-    private final static int RAW_SECTION_NUMBER = 3;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -79,10 +67,6 @@ public class HostDetailFragment extends Fragment {
 
             case NETWORK_MAP_SECTION_NUMBER:
                 rootView = inflater.inflate(R.layout.scan_network_map_layout, container, false);
-                break;
-
-            case RAW_SECTION_NUMBER:
-                rootView = inflater.inflate(R.layout.scan_raw_results_layout, container, false);
                 break;
         }
         return rootView;
@@ -142,6 +126,7 @@ public class HostDetailFragment extends Fragment {
                 this.getContext(), R.layout.service_list_row, services
         );
         servicesList.setAdapter(customAdapter);
+        ViewCompat.setNestedScrollingEnabled(servicesList, true);
     }
 
     private String humanizeReason(String reason) {

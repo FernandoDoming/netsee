@@ -1,54 +1,48 @@
 package com.fdd.netsee;
 
-import android.os.Bundle;
-
-import com.fdd.netsee.constants.Extras;
-import com.fdd.netsee.models.Host;
-import com.fdd.netsee.ui.adapters.HostPagerAdapter;
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
+import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.fdd.netsee.R;
+import com.fdd.netsee.constants.Extras;
+import com.fdd.netsee.models.ScanResult;
+import com.fdd.netsee.ui.adapters.HostPagerAdapter;
+import com.fdd.netsee.ui.adapters.ScanResultPagerAdapter;
 import com.google.android.material.tabs.TabLayout;
 
-public class HostDetailActivity extends AppCompatActivity {
+public class ScanResultActivity extends AppCompatActivity {
 
-    private Host host;
+    private ScanResult scanResult;
     private ViewPager viewPager;
-    private HostPagerAdapter hostPagerAdapter;
+    private ScanResultPagerAdapter pagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_host_detail);
+        setContentView(R.layout.activity_scan_result);
 
-        host = (Host) getIntent().getSerializableExtra(Extras.HOST_EXTRA);
+        scanResult = (ScanResult) getIntent().getSerializableExtra(Extras.SCAN_RESULT_EXTRA);
 
-        hostPagerAdapter = new HostPagerAdapter(getSupportFragmentManager(), host);
+        pagerAdapter = new ScanResultPagerAdapter(getSupportFragmentManager(), scanResult);
 
-        viewPager = findViewById(R.id.host_viewpager);
-        viewPager.setAdapter(hostPagerAdapter);
+        viewPager = findViewById(R.id.viewpager);
+        viewPager.setAdapter(pagerAdapter);
 
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_format_list_bulleted_square);
-        tabLayout.getTabAt(1).setIcon(R.drawable.ic_lan);
+        tabLayout.getTabAt(1).setIcon(R.drawable.ic_code_tags);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(host.getTitle());
+            actionBar.setTitle(scanResult.getTitle());
         }
     }
 
@@ -63,5 +57,4 @@ public class HostDetailActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

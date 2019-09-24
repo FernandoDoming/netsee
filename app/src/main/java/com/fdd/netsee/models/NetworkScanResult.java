@@ -1,9 +1,10 @@
 package com.fdd.netsee.models;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkScanResult extends ScanResult {
+public class NetworkScanResult extends ScanResult implements Serializable {
     private List<Host> hosts;
 
     public NetworkScanResult() {}

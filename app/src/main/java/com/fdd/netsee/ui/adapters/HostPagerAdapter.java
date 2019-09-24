@@ -15,8 +15,7 @@ public class HostPagerAdapter extends FragmentPagerAdapter {
 
     private final String SECTION_1_TITLE = "General";
     private final String SECTION_2_TITLE = "Network";
-    private final String SECTION_3_TITLE = "RAW";
-    private final int    NUM_PAGES       = 3;
+    private final int    NUM_PAGES       = 2;
 
     private Host host;
 
@@ -43,8 +42,6 @@ public class HostPagerAdapter extends FragmentPagerAdapter {
                 return SECTION_1_TITLE;
             case 1:
                 return SECTION_2_TITLE;
-            case 2:
-                return SECTION_3_TITLE;
         }
         return null;
     }

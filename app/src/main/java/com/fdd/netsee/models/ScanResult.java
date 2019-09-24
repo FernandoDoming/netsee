@@ -1,8 +1,9 @@
 package com.fdd.netsee.models;
 
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class ScanResult {
+public abstract class ScanResult implements Serializable {
 
     private String name;
     private String target;

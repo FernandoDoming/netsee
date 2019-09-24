@@ -3,6 +3,7 @@ package com.fdd.netsee;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.ContextThemeWrapper;
@@ -27,6 +28,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fdd.netsee.async.SimpleHttpTask;
+import com.fdd.netsee.constants.Extras;
 import com.fdd.netsee.models.Host;
 import com.fdd.netsee.models.Scan;
 import com.fdd.netsee.ui.adapters.HostListAdapter;
@@ -52,9 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private Snackbar scanSnackbar;
 
     private View scanRunningNoticeContainer;
-    private RecyclerView scanResultList;
     private View scanResultContainer;
-    private HostListAdapter scanResultAdapter;
 
     private final Context context = this;
     private Scan runningScan = null;
@@ -131,11 +131,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         scanResultContainer = findViewById(R.id.scan_results_container);
-        scanResultList = findViewById(R.id.scan_result_list);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        scanResultAdapter = new HostListAdapter(new ArrayList<Host>());
-        scanResultList.setLayoutManager(layoutManager);
-        scanResultList.setAdapter(scanResultAdapter);
 
         SpeedDialView speedDialView = findViewById(R.id.newScanButton);
         speedDialView.addActionItem(
@@ -225,38 +220,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (scan.getScanResult() != null) {
             /* Scan success */
-            scanResultContainer.setVisibility(View.VISIBLE);
-            List<Host> hosts = scan.getScanResult().getHosts();
-            scanResultAdapter.updateData(hosts);
-
-            List<Host> upHosts = new ArrayList<>();
-            List<Host> downHosts = new ArrayList<>();
-
-            for (Host h : hosts) {
-                if (h.getStatus().isUp()) {
-                    upHosts.add(h);
-                }
-                else {
-                    downHosts.add(h);
-                }
-            }
-
-            TextView hostsUpSummary = scanResultContainer.findViewById(R.id.summary_hosts_up);
-            hostsUpSummary.setText(
-                    String.format(
-                            getString(R.string.summary_hosts),
-                            upHosts.size(),
-                            downHosts.size()
-                    )
-            );
-
-            TextView scanTimeSummary = scanResultContainer.findViewById(R.id.summary_scan_time);
-            scanTimeSummary.setText(
-                    String.format(
-                            getString(R.string.summary_time),
-                            scan.getScanResult().getElapsed()
-                    )
-            );
+            Intent i = new Intent(this, ScanResultActivity.class);
+            i.putExtra(Extras.SCAN_RESULT_EXTRA, scan.getScanResult());
+            startActivity(i);
         }
         else {
             /* Scan error */
