@@ -6,42 +6,44 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
+import android.util.Xml;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fdd.netsee.async.SimpleHttpTask;
 import com.fdd.netsee.constants.Extras;
-import com.fdd.netsee.models.Host;
 import com.fdd.netsee.models.Scan;
-import com.fdd.netsee.ui.adapters.HostListAdapter;
+import com.fdd.netsee.models.ScanResult;
+import com.fdd.netsee.parsers.NetworkScanParser;
+import com.fdd.netsee.ui.adapters.SavedScansListAdapter;
 import com.fdd.netsee.ui.dialogs.HostScanBottomDialog;
 import com.fdd.netsee.ui.dialogs.NetworkScanBottomDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public ProgressBar scanProgressBar;
     private Snackbar scanSnackbar;
 
-    private View scanRunningNoticeContainer;
+    private View noScansNoticeContainer;
 
     private final Context context = this;
     private Scan runningScan = null;
@@ -113,21 +115,19 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void findViews() {
+        scanProgressBar = findViewById(R.id.scan_progress_bar);
+        noScansNoticeContainer = findViewById(R.id.no_scans_container);
+    }
+
     private void initViews() {
+        findViews();
+
         sharedProgressDialog = new ProgressDialog(this);
         sharedProgressDialog.setMessage(getString(R.string.dlg_progress_title_download));
         sharedProgressDialog.setIndeterminate(true);
         sharedProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         sharedProgressDialog.setCancelable(false);
-
-        scanProgressBar = findViewById(R.id.scan_progress_bar);
-        scanRunningNoticeContainer = findViewById(R.id.scan_running_container);
-        findViewById(R.id.stop_scan_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopRunningScan();
-            }
-        });
 
         SpeedDialView speedDialView = findViewById(R.id.newScanButton);
         speedDialView.addActionItem(
@@ -161,6 +161,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        List<ScanResult> savedScans = loadScans();
+        if (savedScans.size() > 0) {
+            noScansNoticeContainer.setVisibility(View.GONE);
+            populateSavedScanList(savedScans);
+        }
+        else {
+            noScansNoticeContainer.setVisibility(View.VISIBLE);
+        }
     }
 
     public void newHostScan() {
@@ -183,18 +192,16 @@ public class MainActivity extends AppCompatActivity {
     }
     
     private void onInitScan() {
-        scanRunningNoticeContainer.setVisibility(View.GONE);
-        findViewById(R.id.no_scans_container).setVisibility(View.VISIBLE);
+
     }
 
     public void onScanInProgress() {
         View root = findViewById(R.id.container);
 
-        findViewById(R.id.no_scans_container).setVisibility(View.GONE);
-        scanRunningNoticeContainer.setVisibility(View.VISIBLE);
+        noScansNoticeContainer.setVisibility(View.GONE);
         scanProgressBar.setVisibility(View.VISIBLE);
 
-        /*scanSnackbar = Snackbar.make(
+        scanSnackbar = Snackbar.make(
                 root, getString(R.string.scan_running), Snackbar.LENGTH_INDEFINITE
         ).setAction("STOP", new View.OnClickListener() {
             @Override
@@ -202,20 +209,22 @@ public class MainActivity extends AppCompatActivity {
                 stopRunningScan();
             }
         });
-        scanSnackbar.show();*/
+        scanSnackbar.show();
     }
 
     public void onScanCompleted(Scan scan) {
-        findViewById(R.id.no_scans_container).setVisibility(View.GONE);
-        scanRunningNoticeContainer.setVisibility(View.GONE);
+        noScansNoticeContainer.setVisibility(View.GONE);
         scanProgressBar.setVisibility(View.GONE);
         runningScan = null;
-        //scanSnackbar.dismiss();
+        scanSnackbar.dismiss();
 
         if (scan == null) return;
 
         if (scan.getScanResult() != null) {
             /* Scan success */
+            saveScan(scan.getScanResult());
+            loadSavedScansIntoUI();
+
             Intent i = new Intent(this, ScanResultActivity.class);
             i.putExtra(Extras.SCAN_RESULT_EXTRA, scan.getScanResult());
             startActivity(i);
@@ -242,6 +251,62 @@ public class MainActivity extends AppCompatActivity {
             onScanCompleted(null);
         }
     }
+
+    private void loadSavedScansIntoUI() {
+        List<ScanResult> saveds = loadScans();
+        populateSavedScanList(saveds);
+    }
+
+    private List<ScanResult> loadScans() {
+        File dir = getDir("results", Context.MODE_PRIVATE);
+        File[] files = dir.listFiles();
+        List<ScanResult> savedScans = new ArrayList<>();
+        if (files == null) return savedScans;
+
+        for (File f : files) {
+            XmlPullParser parser = Xml.newPullParser();
+            try {
+                String content = new Scanner(f).useDelimiter("\\Z").next();
+                parser.setInput(new StringReader(content));
+                ScanResult result = new NetworkScanParser().parse(parser);
+                result.setOutput(content);
+                savedScans.add(result);
+
+            } catch (IOException | XmlPullParserException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return savedScans;
+    }
+
+    private void populateSavedScanList(List<ScanResult> results) {
+        RecyclerView scanResultList = findViewById(R.id.saved_scans_list);
+        SavedScansListAdapter savedScansAdapter = new SavedScansListAdapter(results);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        scanResultList.setLayoutManager(layoutManager);
+        scanResultList.setAdapter(savedScansAdapter);
+    }
+
+    private void saveScan(ScanResult result) {
+        File resultsdir = getDir("results", Context.MODE_PRIVATE);
+        if (!resultsdir.exists()) resultsdir.mkdirs();
+
+        long timstamp = System.currentTimeMillis() / 1000L;
+        String filename = resultsdir.getPath() + "/" + result.getTarget() + "_" + timstamp + ".xml";
+
+        Log.i(getClass().getName(), "Saving scan result to " + filename);
+
+        FileOutputStream stream = null;
+        try {
+            stream = new FileOutputStream(new File(filename));
+            stream.write(result.getOutput().getBytes());
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /* Helper functions */
     // TODO: Move them to a helper class

@@ -95,7 +95,6 @@ public class NmapExecutor extends AsyncTask<Scan, Integer, Scan> {
             else if (scan.getType() == ScanType.NET_SCAN) {
                 // Network scan
                 scanResult = new NetworkScanParser().parse(parser);
-                scanResult.setTarget(scan.getTarget());
 
                 try {
                     NetworkScanResult ns = (NetworkScanResult) scanResult;
@@ -120,6 +119,7 @@ public class NmapExecutor extends AsyncTask<Scan, Integer, Scan> {
 
             if (scanResult != null) {
                 for (Host host : scanResult.getHosts()) enrichHost(host);
+                scanResult.setTarget( scan.getTarget() );
 
             } else {
                 Log.w(this.getClass().getName(), "Scan result was null");

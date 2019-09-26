@@ -7,9 +7,12 @@ public abstract class ScanResult implements Serializable {
 
     private String name;
     private String target;
+    private String args;
+
     private long startTime;
     private long endTime;
     private float elapsed;
+
     private String scanStatus;
     private String output;
     private String summary;
@@ -20,6 +23,8 @@ public abstract class ScanResult implements Serializable {
     public abstract String getResult();
 
     /* Public methods */
+
+    /* Getters / setters */
 
     public String getName() {
         return name;
@@ -35,6 +40,14 @@ public abstract class ScanResult implements Serializable {
 
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    public String getArgs() {
+        return args;
+    }
+
+    public void setArgs(String args) {
+        this.args = args;
     }
 
     public long getStartTime() {
@@ -86,10 +99,10 @@ public abstract class ScanResult implements Serializable {
     }
 
     public String getTitle() {
-        if (name == null) {
-            return target;
-        } else {
-            return name;
-        }
+        if (name != null) return name;
+        if (target != null) return target;
+        if (args != null) return args.split(" ")[args.split(" ").length - 1];
+
+        return "Unnamed scan";
     }
 }

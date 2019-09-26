@@ -11,6 +11,10 @@ public class ServiceStatus implements Serializable {
         this.reason = reason;
     }
 
+    public boolean isOpen() {
+        return state.equals("open");
+    }
+
     public String getState() {
         return state;
     }

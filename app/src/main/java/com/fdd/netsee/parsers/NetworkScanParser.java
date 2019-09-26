@@ -40,6 +40,7 @@ public class NetworkScanParser {
                     networkScanResult.setSummary(parser.getAttributeValue(null, "summary"));
                     break;
                 case "nmaprun":
+                    networkScanResult.setArgs( parser.getAttributeValue(null, "args") );
                     networkScanResult.setStartTime(Long.parseLong(parser.getAttributeValue(null, "start")));
                     break;
             }

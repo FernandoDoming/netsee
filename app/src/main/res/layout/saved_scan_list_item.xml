@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/result_title_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/scan_result_target"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/almost_black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:typeface="normal"
+            tools:text="scanme.nmap.org" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/scan_result_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/scanned_at"
+            android:textColor="@color/grey_light" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/result_title_container"
+        android:orientation="horizontal"
+        android:padding="30dp">
+
+        <ImageView
+            android:id="@+id/summary_scan_icon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginEnd="10dp"
+            app:srcCompat="@drawable/ic_host"
+            tools:srcCompat="@drawable/ic_host" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@drawable/online_indicator"
+            tools:srcCompat="@drawable/online_indicator" />
+
+        <TextView
+            android:id="@+id/summary_scan_online"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            tools:text="5" />
+
+        <ImageView
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginEnd="5dp"
+            app:srcCompat="@drawable/offline_indicator"
+            tools:srcCompat="@drawable/offline_indicator" />
+
+        <TextView
+            android:id="@+id/summary_scan_offline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="12" />
+
+    </LinearLayout>
+</RelativeLayout>

@@ -38,6 +38,7 @@ public class HostScanParser {
                     break;
                 case "nmaprun":
                     String startTime = parser.getAttributeValue(null, "start");
+                    hostScanResult.setArgs( parser.getAttributeValue(null, "args") );
                     if (startTime != null) {
                         hostScanResult.setStartTime(Long.parseLong(startTime));
                     }

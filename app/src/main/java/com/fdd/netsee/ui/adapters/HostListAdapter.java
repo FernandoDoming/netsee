@@ -26,9 +26,6 @@ public class HostListAdapter extends RecyclerView.Adapter<HostListAdapter.HostVi
     private List<Host> dataset;
     private RecyclerView recyclerView;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     static class HostViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         View root;
