@@ -2,13 +2,19 @@ package com.fdd.netsee.ui.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.fdd.netsee.R;
@@ -18,6 +24,7 @@ import com.fdd.netsee.models.Host;
 import com.fdd.netsee.models.ScanResult;
 import com.fdd.netsee.models.Service;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,8 +35,49 @@ public class SavedScansListAdapter extends RecyclerView.Adapter<SavedScansListAd
     private List<ScanResult> dataset;
     private RecyclerView recyclerView;
 
+    private boolean multiSelect = false;
+    private List<ScanResult> selectedItems = new ArrayList<>();
+
+    private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            multiSelect = true;
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_actions_bar_context, menu);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.discard_button:
+                    for (ScanResult r : selectedItems) {
+                        File outputFile = new File(r.filepath);
+                        outputFile.delete();
+                        dataset.remove(r);
+                    }
+                    break;
+            }
+
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            multiSelect = false;
+            selectedItems.clear();
+            notifyDataSetChanged();
+        }
+    };
+
     static class SavedScanViewHolder extends RecyclerView.ViewHolder {
-        // each data item is just a string in this case
         View root;
         SavedScanViewHolder(View root) {
             super(root);
@@ -116,10 +164,30 @@ public class SavedScansListAdapter extends RecyclerView.Adapter<SavedScansListAd
                 int index = recyclerView.getChildLayoutPosition(view);
                 ScanResult result = dataset.get(index);
 
+                if (multiSelect) {
+                    selectItem(result, view);
+                }
+                else {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, ScanResultActivity.class);
+                    intent.putExtra(Extras.SCAN_RESULT_EXTRA, result);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
+        holder.root.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                int index = recyclerView.getChildLayoutPosition(view);
+                ScanResult result = dataset.get(index);
+
                 Context context = view.getContext();
-                Intent intent = new Intent(context, ScanResultActivity.class);
-                intent.putExtra(Extras.SCAN_RESULT_EXTRA, result);
-                context.startActivity(intent);
+                AppCompatActivity activity = (AppCompatActivity) context;
+                activity.startSupportActionMode(actionModeCallbacks);
+                selectItem(result, view);
+
+                return true;
             }
         });
     }
@@ -132,5 +200,30 @@ public class SavedScansListAdapter extends RecyclerView.Adapter<SavedScansListAd
     public void updateDataset(List<ScanResult> dataset) {
         this.dataset = dataset;
         notifyDataSetChanged();
+    }
+
+    private void selectItem(ScanResult item, View view) {
+        if (multiSelect) {
+            if (selectedItems.contains(item)) {
+                selectedItems.remove(item);
+                highlightView(view, false);
+            } else {
+                selectedItems.add(item);
+                highlightView(view, true);
+            }
+        }
+    }
+
+    private void highlightView(View view, boolean highlighted) {
+        if (highlighted) {
+            view.setBackgroundColor(
+                    view.getContext().getResources().getColor(R.color.highlight_color)
+            );
+        }
+        else {
+            view.setBackgroundColor(
+                    view.getContext().getResources().getColor(R.color.white)
+            );
+        }
     }
 }

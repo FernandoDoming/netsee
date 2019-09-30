@@ -99,5 +99,6 @@
     <string name="undefined">Undefined</string>
     <string name="scanned_at">Scanned at %1$s</string>
     <string name="previous_scans">Previous scans</string>
+    <string name="delete">Delete</string>
 
 </resources>
