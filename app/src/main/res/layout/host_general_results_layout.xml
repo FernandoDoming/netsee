@@ -73,7 +73,7 @@
 
             <TextView
                 android:id="@+id/host_mac_title"
-                android:layout_width="100dp"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:text="@string/mac"
                 android:textAppearance="@style/PropertyName" />
@@ -101,7 +101,7 @@
             <TextView
                 android:id="@+id/host_mac_vendor_title"
                 android:text="@string/mac_vendor"
-                android:layout_width="100dp"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/PropertyName" />
 
@@ -128,7 +128,7 @@
             <TextView
                 android:id="@+id/host_os_title"
                 android:text="@string/os"
-                android:layout_width="100dp"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/PropertyName" />
 
@@ -155,18 +155,18 @@
             <TextView
                 android:id="@+id/host_hostname_title"
                 android:text="@string/hostname"
-                android:layout_width="100dp"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/PropertyName" />
 
-            <TextView
-                android:id="@+id/host_hostname"
-                android:layout_toEndOf="@id/host_hostname_title"
-                android:text="@string/unknown"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/hostname_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:textAppearance="@style/PropertyValue"/>
+                android:layout_toEndOf="@id/host_hostname_title"
+                android:orientation="vertical">
+
+            </LinearLayout>
 
         </RelativeLayout>
 
