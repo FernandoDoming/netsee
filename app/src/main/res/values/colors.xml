@@ -20,10 +20,17 @@
     <color name="indigo">#3F51B5</color>
     <color name="indigo_dark">#303F9F</color>
     <color name="indigo_light">#C5CAE9</color>
+    
+    <color name="purple">#6200EE</color>
+    <color name="purple_dark">#4604C0</color>
+    <color name="purple_light">#873CF2</color>
+
+    <color name="magenta">#5C1349</color>
 
     <color name="nice_green">#008577</color>
     <color name="nice_green_25">#40008577</color>
     <color name="darker_green">#00574B</color>
+
     <color name="hot_pink">#D81B60</color>
     <color name="hot_pink_25">#40D81B60</color>
     <color name="you_really_got_me">#AB234B</color>
