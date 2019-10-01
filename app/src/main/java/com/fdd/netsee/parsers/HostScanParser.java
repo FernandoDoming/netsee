@@ -124,6 +124,7 @@ public class HostScanParser {
         String port = null;
         String service = null;
         String version = null;
+        String cpe = null;
 
         protocol = parser.getAttributeValue(null, "protocol");
         port     = parser.getAttributeValue(null, "portid");
@@ -133,16 +134,28 @@ public class HostScanParser {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
+
             String name = parser.getName();
-            if (name.equals("state")) {
-                status = readStatus(parser);
-            } else if (name.equals("service")) {
-                service = readService(parser);
-                version = readVersion(parser);
+            switch(name) {
+                case "state":
+                    status = readStatus(parser);
+                    break;
+
+                case "service":
+                    service = readService(parser);
+                    version = readVersion(parser);
+                    break;
+
+                case "cpe":
+                    if (parser.next() == XmlPullParser.TEXT && cpe == null) {
+                        cpe = parser.getText();
+                    }
+                    break;
             }
         }
         Service srvc = new Service(protocol, port, service, status);
-        if(version != null) srvc.setVersion(version);
+        if (version != null) srvc.setVersion(version);
+        if (cpe != null) srvc.setCpe(cpe);
         return srvc;
     }
 
