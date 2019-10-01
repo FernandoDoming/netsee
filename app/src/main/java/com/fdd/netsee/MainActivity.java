@@ -270,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
                 parser.setInput(new StringReader(content));
                 ScanResult result = new NetworkScanParser().parse(parser);
                 result.setOutput(content);
+                result.filepath = f.getPath();
                 savedScans.add(result);
 
             } catch (IOException | XmlPullParserException e) {

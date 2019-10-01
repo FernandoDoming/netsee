@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">@color/indigo_dark</color>
     <color name="colorAccent">@color/you_really_got_me</color>
 
+    <color name="highlight_color">#E8EAF6</color>
+
     <color name="white">#FFF</color>
     <color name="almost_white">#F3F3F3</color>
     <color name="grey_dark">#777</color>

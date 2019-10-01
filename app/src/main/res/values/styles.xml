@@ -12,10 +12,20 @@
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions">true</item>
 
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="actionModeStyle">@style/ActionModeStyle</item>
+        <item name="android:actionModeStyle">@style/ActionModeStyle</item>
+
         <!-- specify enter and exit transitions
         <item name="android:windowEnterTransition">@transition/explode</item>
         <item name="android:windowExitTransition">@transition/explode</item> -->
 
+    </style>
+
+    <style name="ActionModeStyle" parent="@style/Widget.AppCompat.ActionMode">
+        <item name="background">@color/indigo_dark</item>
     </style>
 
     <style name="PropertyValue">
