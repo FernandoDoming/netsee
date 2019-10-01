@@ -56,7 +56,7 @@ public class HostScanParser {
 
         Host host = new Host();
         List<Service> services = new ArrayList<>();
-        String hostname  = null;
+        List<String> hostnames  = new ArrayList<>();
 
         int depth = parser.getDepth();
         while (!(parser.next() == XmlPullParser.END_TAG && parser.getDepth() == depth)) {
@@ -80,7 +80,7 @@ public class HostScanParser {
                     services = readPorts(parser);
                     break;
                 case "hostname":
-                    hostname = readHostname(parser);
+                    hostnames.add(readHostname(parser));
                     break;
                 //case "hosts":
                 //    host.setUp(Integer.parseInt(parser.getAttributeValue(null, "up")) > 0);
@@ -94,7 +94,7 @@ public class HostScanParser {
             }
         }
         host.setServices(services);
-        host.setHostname(hostname);
+        host.setHostnames(hostnames);
 
         return host;
     }

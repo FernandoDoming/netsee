@@ -8,7 +8,7 @@ import java.util.List;
 public class Host implements Serializable {
     private String address;
     private List<Service> services;
-    private String hostname;
+    private List<String> hostnames = new ArrayList<>();
     private String os;
     private String mac;
     private String macVendor;
@@ -45,7 +45,7 @@ public class Host implements Serializable {
         String title = "";
 
         if (isMe) title = "This device - ";
-        if (hostname != null)     title += hostname;
+        if (hostnames.size() > 0)     title += hostnames.get(0);
         else if (address != null) title += address;
         else title += mac;
 
@@ -82,8 +82,8 @@ public class Host implements Serializable {
     }
 
     public String getTarget() {
-        if (hostname != null && !hostname.equals("")) {
-            return hostname;
+        if (hostnames.size() > 0 && !hostnames.get(0).equals("")) {
+            return hostnames.get(0);
         } else {
             return address;
         }
@@ -117,12 +117,12 @@ public class Host implements Serializable {
         this.os = os;
     }
 
-    public String getHostname() {
-        return hostname;
+    public List<String> getHostnames() {
+        return hostnames;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public void setHostnames(List<String> hostnames) {
+        this.hostnames = hostnames;
     }
 
     public boolean isMe() {

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -82,7 +83,7 @@ public class HostDetailFragment extends Fragment {
         TextView macView       = root.findViewById(R.id.host_mac);
         TextView macVendorView = root.findViewById(R.id.host_mac_vendor);
         TextView osView        = root.findViewById(R.id.host_os);
-        TextView hostnameView  = root.findViewById(R.id.host_hostname);
+        LinearLayout hostnameContainer = root.findViewById(R.id.hostname_container);
         Chip onlineChip        = root.findViewById(R.id.online_chip);
 
         addressView.setText( host.getAddress() );
@@ -97,8 +98,11 @@ public class HostDetailFragment extends Fragment {
         if (host.getOs() != null) {
             osView.setText(host.getOs());
         }
-        if (host.getHostname() != null) {
-            hostnameView.setText(host.getHostname());
+        for (String hostname : host.getHostnames()) {
+            View child = View.inflate(getContext(), R.layout.host_details_hostname_itme, null);
+            TextView tv = child.findViewById(R.id.host_hostname);
+            tv.setText(hostname);
+            hostnameContainer.addView(child);
         }
 
         if ( host.isUp() ) {
