@@ -63,4 +63,10 @@ public class Service implements Serializable {
         }
         return title;
     }
+
+    public String getSubtitle() {
+        if (product != null) return product;
+        if (version != null) return version;
+        return null;
+    }
 }

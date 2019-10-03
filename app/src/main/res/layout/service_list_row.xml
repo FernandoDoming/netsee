@@ -19,6 +19,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/service_name"
         android:layout_marginBottom="10dp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:maxWidth="250dp"
         android:text="Version"
         android:textColor="@color/grey_dark" />
 

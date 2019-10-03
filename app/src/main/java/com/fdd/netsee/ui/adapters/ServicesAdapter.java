@@ -57,13 +57,7 @@ public class ServicesAdapter extends ArrayAdapter {
                 name += " - " + service.getService();
             }
             serviceName.setText(name);
-
-            if (service.getProduct() != null) {
-                serviceVersion.setText( service.getProduct() );
-            }
-            else {
-                serviceVersion.setText( R.string.unknown_service );
-            }
+            serviceVersion.setText( service.getSubtitle() );
 
             chipGroup.removeAllViews();
             addChipToContainer(chipGroup, service.getStatus().getState());
