@@ -29,6 +29,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui:2.0.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'eu.chainfire:libsuperuser:1.1.0.201907261845'
+    implementation 'com.github.florent37:expansionpanel:1.2.2'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

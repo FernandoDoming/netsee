@@ -6,76 +6,89 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/result_title_container"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true">
 
-        <!-- Title -->
-        <TextView
-            android:id="@+id/scan_result_target"
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/not_so_grey"
+            />
+
+        <RelativeLayout
+            android:id="@+id/result_title_container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/almost_black"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:typeface="normal"
-            tools:text="scanme.nmap.org" />
+            android:padding="15dp">
 
-        <!-- Subtitle -->
-        <TextView
-            android:id="@+id/scan_result_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/scanned_at"
-            android:textColor="@color/grey_light" />
+            <!-- Title -->
+            <!--TextView
+                android:id="@+id/scan_result_target"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/almost_black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:typeface="normal"
+                tools:text="scanme.nmap.org" -->
 
-    </LinearLayout>
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/scan_result_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/scanned_at"
+                android:textColor="@color/almost_black" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toEndOf="@id/result_title_container"
-        android:orientation="horizontal"
-        android:padding="30dp">
 
-        <ImageView
-            android:id="@+id/summary_scan_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/ic_host"
-            tools:srcCompat="@drawable/ic_host" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal" >
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="5dp"
-            app:srcCompat="@drawable/online_indicator"
-            tools:srcCompat="@drawable/online_indicator" />
+                <ImageView
+                    android:id="@+id/summary_scan_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    app:srcCompat="@drawable/ic_host"
+                    tools:srcCompat="@drawable/ic_host" />
 
-        <TextView
-            android:id="@+id/summary_scan_online"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            tools:text="5" />
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="5dp"
+                    app:srcCompat="@drawable/online_indicator"
+                    tools:srcCompat="@drawable/online_indicator" />
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginEnd="5dp"
-            app:srcCompat="@drawable/offline_indicator"
-            tools:srcCompat="@drawable/offline_indicator" />
+                <TextView
+                    android:id="@+id/summary_scan_online"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    tools:text="5" />
 
-        <TextView
-            android:id="@+id/summary_scan_offline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="12" />
+                <!--ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="5dp"
+                    app:srcCompat="@drawable/offline_indicator"
+                    tools:srcCompat="@drawable/offline_indicator" />
 
+                <TextView
+                    android:id="@+id/summary_scan_offline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="12" /-->
+            </LinearLayout>
+
+        </RelativeLayout>
     </LinearLayout>
 </RelativeLayout>

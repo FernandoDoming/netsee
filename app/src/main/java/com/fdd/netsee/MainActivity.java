@@ -12,7 +12,10 @@ import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -24,8 +27,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.fdd.netsee.async.SimpleHttpTask;
 import com.fdd.netsee.constants.Extras;
+import com.fdd.netsee.models.Host;
 import com.fdd.netsee.models.Scan;
 import com.fdd.netsee.models.ScanResult;
+import com.fdd.netsee.models.Service;
 import com.fdd.netsee.parsers.NetworkScanParser;
 import com.fdd.netsee.ui.adapters.SavedScansListAdapter;
 import com.fdd.netsee.ui.dialogs.HostScanBottomDialog;
@@ -41,8 +46,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class MainActivity extends AppCompatActivity {
@@ -162,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        List<ScanResult> savedScans = loadScans();
+        Map<String, List<ScanResult>> savedScans = loadScans();
         if (savedScans.size() > 0) {
             noScansNoticeContainer.setVisibility(View.GONE);
             populateSavedScanList(savedScans);
@@ -253,14 +262,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadSavedScansIntoUI() {
-        List<ScanResult> saveds = loadScans();
+        Map<String, List<ScanResult>> saveds = loadScans();
         populateSavedScanList(saveds);
     }
 
-    private List<ScanResult> loadScans() {
+    private Map<String, List<ScanResult>> loadScans() {
         File dir = getDir("results", Context.MODE_PRIVATE);
         File[] files = dir.listFiles();
-        List<ScanResult> savedScans = new ArrayList<>();
+        Map<String, List<ScanResult>> savedScans = new HashMap<>();
         if (files == null) return savedScans;
 
         for (File f : files) {
@@ -271,7 +280,12 @@ public class MainActivity extends AppCompatActivity {
                 ScanResult result = new NetworkScanParser().parse(parser);
                 result.setOutput(content);
                 result.filepath = f.getPath();
-                savedScans.add(result);
+
+                String target = result.getTitle();
+                if (savedScans.get(target) == null) {
+                    savedScans.put(target, new ArrayList<ScanResult>());
+                }
+                savedScans.get(target).add(result);
 
             } catch (IOException | XmlPullParserException e) {
                 e.printStackTrace();
@@ -281,12 +295,27 @@ public class MainActivity extends AppCompatActivity {
         return savedScans;
     }
 
-    private void populateSavedScanList(List<ScanResult> results) {
-        RecyclerView scanResultList = findViewById(R.id.saved_scans_list);
-        SavedScansListAdapter savedScansAdapter = new SavedScansListAdapter(results);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        scanResultList.setLayoutManager(layoutManager);
-        scanResultList.setAdapter(savedScansAdapter);
+    private void populateSavedScanList( Map<String, List<ScanResult>> results) {
+        LinearLayout container = findViewById(R.id.saved_scans_container);
+
+        for (Map.Entry<String, List<ScanResult>> entry : results.entrySet()) {
+            View child = getLayoutInflater().inflate(R.layout.saved_scans_list_by_target, null);
+            TextView title = child.findViewById(R.id.saved_scans_title);
+            TextView count = child.findViewById(R.id.saved_scans_count);
+            title.setText(entry.getKey());
+            count.setText(
+                getResources().getString(R.string.scan_count, entry.getValue().size())
+            );
+
+            LinearLayout scanResultList = child.findViewById(R.id.saved_scans_list);
+            for (ScanResult result : entry.getValue()) {
+                View item = getLayoutInflater().inflate(R.layout.saved_scan_list_item, null);
+                bindScanResultToView(item, result);
+                scanResultList.addView(item);
+            }
+
+            container.addView(child);
+        }
     }
 
     private void saveScan(ScanResult result) {
@@ -305,6 +334,51 @@ public class MainActivity extends AppCompatActivity {
             stream.close();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void bindScanResultToView(View view, ScanResult result) {
+        TextView subtitle   = view.findViewById(R.id.scan_result_date);
+        ImageView typeIcon  = view.findViewById(R.id.summary_scan_icon);
+        TextView onlineView = view.findViewById(R.id.summary_scan_online);
+
+        Date scandate = new Date(result.getEndTime() * 1000);
+        String formatted = new SimpleDateFormat("dd-mm-yyyy hh:mm").format(scandate);
+        subtitle.setText( getString(R.string.scanned_at, formatted) );
+
+        if (result.getHosts().size() == 1) {
+            Host host = result.getHosts().get(0);
+            typeIcon.setImageDrawable(
+                    getDrawable(R.drawable.ic_ethernet)
+            );
+
+            List<Service> services = host.getServices();
+            int openServices = 0, closedServices = 0;
+
+            for (Service s : services) {
+                if (s.getStatus().isOpen()) {
+                    openServices++;
+                }
+                else {
+                    closedServices++;
+                }
+            }
+
+            onlineView.setText( Integer.toString(openServices) );
+        }
+        else {
+            int upHosts = 0, downHosts = 0;
+
+            for (Host h : result.getHosts()) {
+                if (h.getStatus().isUp()) {
+                    upHosts++;
+                }
+                else {
+                    downHosts++;
+                }
+            }
+
+            onlineView.setText( Integer.toString(upHosts) );
         }
     }
 

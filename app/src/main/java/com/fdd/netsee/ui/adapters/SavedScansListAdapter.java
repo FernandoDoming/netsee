@@ -109,13 +109,13 @@ public class SavedScansListAdapter extends RecyclerView.Adapter<SavedScansListAd
         ScanResult result = dataset.get(position);
         Context ctx = holder.root.getContext();
 
-        TextView title = holder.root.findViewById(R.id.scan_result_target);
+        //TextView title = holder.root.findViewById(R.id.scan_result_target);
         TextView subtitle = holder.root.findViewById(R.id.scan_result_date);
         ImageView typeIcon = holder.root.findViewById(R.id.summary_scan_icon);
         TextView onlineView = holder.root.findViewById(R.id.summary_scan_online);
-        TextView offlineView = holder.root.findViewById(R.id.summary_scan_offline);
+        //TextView offlineView = holder.root.findViewById(R.id.summary_scan_offline);
 
-        title.setText( result.getTitle() );
+        //title.setText( result.getTitle() );
 
         Date scandate = new Date(result.getEndTime() * 1000);
         String formatted = new SimpleDateFormat("dd-mm-yyyy hh:mm").format(scandate);
@@ -140,7 +140,7 @@ public class SavedScansListAdapter extends RecyclerView.Adapter<SavedScansListAd
             }
 
             onlineView.setText( Integer.toString(openServices) );
-            offlineView.setText( Integer.toString(closedServices) );
+            //offlineView.setText( Integer.toString(closedServices) );
         }
         else {
             int upHosts = 0, downHosts = 0;
@@ -155,7 +155,7 @@ public class SavedScansListAdapter extends RecyclerView.Adapter<SavedScansListAd
             }
 
             onlineView.setText( Integer.toString(upHosts) );
-            offlineView.setText( Integer.toString(downHosts) );
+            //offlineView.setText( Integer.toString(downHosts) );
         }
 
         holder.root.setOnClickListener(new View.OnClickListener() {
