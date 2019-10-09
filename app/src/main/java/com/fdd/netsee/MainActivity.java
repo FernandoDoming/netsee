@@ -10,6 +10,7 @@ import android.util.Log;
 import android.util.Xml;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,6 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -69,6 +71,48 @@ public class MainActivity extends AppCompatActivity {
     private final Context context = this;
     private Scan runningScan = null;
     private int currentEabi;
+
+    private boolean multiSelect = false;
+    private List<ScanResult> selectedItems = new ArrayList<>();
+
+    private ActionMode.Callback actionModeCallbacks = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            multiSelect = true;
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.menu_actions_bar_context, menu);
+
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return true;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.discard_button:
+                    for (ScanResult r : selectedItems) {
+                        File outputFile = new File(r.filepath);
+                        outputFile.delete();
+                        // Reload list
+                        loadSavedScansIntoUI();
+                    }
+                    break;
+            }
+
+            mode.finish();
+            return true;
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            multiSelect = false;
+            selectedItems.clear();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,14 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Map<String, List<ScanResult>> savedScans = loadScans();
-        if (savedScans.size() > 0) {
-            noScansNoticeContainer.setVisibility(View.GONE);
-            populateSavedScanList(savedScans);
-        }
-        else {
-            noScansNoticeContainer.setVisibility(View.VISIBLE);
-        }
+        loadSavedScansIntoUI();
     }
 
     public void newHostScan() {
@@ -263,7 +300,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadSavedScansIntoUI() {
         Map<String, List<ScanResult>> saveds = loadScans();
-        populateSavedScanList(saveds);
+        if (saveds.isEmpty()) {
+            noScansNoticeContainer.setVisibility(View.VISIBLE);
+        }
+        else {
+            noScansNoticeContainer.setVisibility(View.GONE);
+            populateSavedScanList(saveds);
+        }
     }
 
     private Map<String, List<ScanResult>> loadScans() {
@@ -297,6 +340,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateSavedScanList( Map<String, List<ScanResult>> results) {
         LinearLayout container = findViewById(R.id.saved_scans_container);
+        container.removeAllViews();
 
         for (Map.Entry<String, List<ScanResult>> entry : results.entrySet()) {
             View child = getLayoutInflater().inflate(R.layout.saved_scans_list_by_target, null);
@@ -337,10 +381,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void bindScanResultToView(View view, ScanResult result) {
+    private void bindScanResultToView(View view, final ScanResult result) {
         TextView subtitle   = view.findViewById(R.id.scan_result_date);
         ImageView typeIcon  = view.findViewById(R.id.summary_scan_icon);
         TextView onlineView = view.findViewById(R.id.summary_scan_online);
+        View clickable      = view.findViewById(R.id.scan_result_clickable);
 
         Date scandate = new Date(result.getEndTime() * 1000);
         String formatted = new SimpleDateFormat("dd-mm-yyyy hh:mm").format(scandate);
@@ -379,6 +424,58 @@ public class MainActivity extends AppCompatActivity {
             }
 
             onlineView.setText( Integer.toString(upHosts) );
+        }
+
+        clickable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (multiSelect) {
+                    selectItem(result, view);
+                }
+                else {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, ScanResultActivity.class);
+                    intent.putExtra(Extras.SCAN_RESULT_EXTRA, result);
+                    context.startActivity(intent);
+                }
+            }
+        });
+
+        clickable.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Context context = view.getContext();
+                AppCompatActivity activity = (AppCompatActivity) context;
+                activity.startSupportActionMode(actionModeCallbacks);
+                selectItem(result, view);
+
+                return true;
+            }
+        });
+    }
+
+    private void selectItem(ScanResult item, View view) {
+        if (multiSelect) {
+            if (selectedItems.contains(item)) {
+                selectedItems.remove(item);
+                highlightView(view, false);
+            } else {
+                selectedItems.add(item);
+                highlightView(view, true);
+            }
+        }
+    }
+
+    private void highlightView(View view, boolean highlighted) {
+        if (highlighted) {
+            view.setBackgroundColor(
+                    view.getContext().getResources().getColor(R.color.highlight_color)
+            );
+        }
+        else {
+            view.setBackgroundColor(
+                    view.getContext().getResources().getColor(R.color.white)
+            );
         }
     }
 
